@@ -1,0 +1,16 @@
+T__0=1
+T__1=2
+T__2=3
+ASSOCIATIONRELATIONSHIP=4
+INFLUENCERELATIONSHIP=5
+TRIGGERINGRELATIONSHIP=6
+ID=7
+IDENTIFIER=8
+STRING=9
+','=1
+'\r'=2
+'\n'=3
+'"AssociationRelationship"'=4
+'"InfluenceRelationship"'=5
+'"TriggeringRelationship"'=6
+'id-'=7
