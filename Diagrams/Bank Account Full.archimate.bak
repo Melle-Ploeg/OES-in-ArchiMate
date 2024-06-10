@@ -12,7 +12,7 @@
   <folder name="Technology &amp; Physical" id="id-dbd85af2da524a7695cfd6c0169f5bbf" type="technology"/>
   <folder name="Motivation" id="id-a01f4f788a6e464f9e3f444b605e62df" type="motivation">
     <element xsi:type="archimate:Value" name="Balance" id="id-c8273284c7ee45df9ce4d9f30353e77e"/>
-    <element xsi:type="archimate:Constraint" name="&lt;&lt;Type>>" id="id-748cb95d20ad496e8e65566fdc7d4aa4"/>
+    <element xsi:type="archimate:Constraint" name="&lt;&lt;Type>> Integer" id="id-748cb95d20ad496e8e65566fdc7d4aa4"/>
     <element xsi:type="archimate:Constraint" name="&lt;&lt;Initial>> 0" id="id-bc581a5d50d14e718112b0685a8cb38c"/>
     <element xsi:type="archimate:Assessment" name="&lt;&lt;Recurrence>> 5" id="id-2aae8255682d4bc9ade2eea51117c720"/>
     <element xsi:type="archimate:Constraint" name="&lt;&lt;Limit>> 100" id="id-67228726ad114cf292e5b430d17b9668"/>
@@ -51,7 +51,6 @@
       </child>
       <child xsi:type="archimate:DiagramObject" id="id-164ed09712a445f48db790b2724de14c" targetConnections="id-7584061d1aba4b2c92617623f17ffd98" archimateElement="id-748cb95d20ad496e8e65566fdc7d4aa4">
         <bounds x="1152" y="648" width="120" height="55"/>
-        <feature name="labelExpression" value="&lt;&lt;Type>>&#xD;&#xA;Integer"/>
       </child>
       <child xsi:type="archimate:DiagramObject" id="id-3f32ea6b457b427f92c6af6736c7d60e" archimateElement="id-bc581a5d50d14e718112b0685a8cb38c">
         <bounds x="1152" y="768" width="120" height="55"/>
