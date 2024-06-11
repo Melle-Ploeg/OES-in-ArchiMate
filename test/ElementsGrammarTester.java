@@ -16,6 +16,7 @@ public class ElementsGrammarTester {
         TokenStream tokens = new CommonTokenStream(lexer);
         ElementsGrammarParser parser = new ElementsGrammarParser(tokens);
         ElementsGrammarParser.CsvFileContext tree = parser.csvFile();
-        System.out.println(tree.row(6).toStringTree());
+        System.out.println(tree.row(6).name().STRING());
+        System.out.println("asd2.3".replaceAll("[^0-9|.]", ""));
     }
 }

@@ -39,7 +39,7 @@ event : BUSINESSCOLLABORATION
         | TECHNOLOGYINTERACTION
         | TECHNOLOGYPROCESS
         | TECHNOLOGYSERVICE
-        |OUTCOME ;
+        | OUTCOME ;
 
 other : ASSESSMENT
         | CONSTRAINT
@@ -90,6 +90,7 @@ ID : 'id-';
 IDENTIFIER : '"' ID (LOWERCASE | DIGIT)+ '"' ;
 STRING : '"' ('""' | ~'"')* '"' ;
 NUMBER : DIGIT+ ;
+DOUBLE : DIGIT ('.' DIGIT)? ;
 fragment LOWERCASE : [a-z];
 fragment UPPERCASE : [A-Z];
 fragment DIGIT : [0-9];

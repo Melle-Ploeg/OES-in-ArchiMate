@@ -38,6 +38,7 @@ ID=37
 IDENTIFIER=38
 STRING=39
 NUMBER=40
+DOUBLE=41
 '\r'=1
 '\n'=2
 '"Assessment"'=3
