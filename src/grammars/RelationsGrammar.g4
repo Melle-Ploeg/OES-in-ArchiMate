@@ -15,6 +15,11 @@ ASSOCIATIONRELATIONSHIP : '"AssociationRelationship"';
 INFLUENCERELATIONSHIP : '"InfluenceRelationship"';
 TRIGGERINGRELATIONSHIP : '"TriggeringRelationship"';
 
+
+PLUS : '+';
+MINUS : '-';
+MULT : '*';
+DIV : '/';
 ID : 'id-';
 IDENTIFIER : '"' ID (LOWERCASE | DIGIT)+ '"' ;
 STRING : '"' ('""' | ~'"')* '"' ;

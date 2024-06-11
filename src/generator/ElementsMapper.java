@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ElementsMapper extends ElementsGrammarBaseVisitor<Object> {
-    private Map<String, ElemTypes> types = new HashMap<>();
-    private Map<String, Double> values = new HashMap<>();
-    private Map<String, List<Integer>> recurrences = new HashMap<>();
+    private final Map<String, ElemType> types;
+    private final Map<String, Double> values;
+    private final Map<String, List<Integer>> recurrences;
 
     public ElementsMapper() {
         types = new HashMap<>();
@@ -26,22 +26,22 @@ public class ElementsMapper extends ElementsGrammarBaseVisitor<Object> {
 
     @Override
     public Object visitRow(ElementsGrammarParser.RowContext ctx) {
-        types.put(ctx.IDENTIFIER().getText(), (ElemTypes) visit(ctx.type()));
-        if (types.get(ctx.IDENTIFIER().getText()) == ElemTypes.CONSTRAINT) {
+        types.put(ctx.IDENTIFIER().getText(), (ElemType) visit(ctx.type()));
+        if (types.get(ctx.IDENTIFIER().getText()) == ElemType.CONSTRAINT) {
             if (ctx.name().getText().contains("Initial")) {
-                types.replace(ctx.IDENTIFIER().getText(), ElemTypes.INITIAL);
+                types.replace(ctx.IDENTIFIER().getText(), ElemType.INITIAL);
                 Double initial = Double.parseDouble(ctx.name().getText().replaceAll("[^0-9|.]", ""));
                 values.put(ctx.IDENTIFIER().getText(), initial);
             } else if (ctx.name().getText().contains("Range")) {
-                types.replace(ctx.IDENTIFIER().getText(), ElemTypes.RANGE);
+                types.replace(ctx.IDENTIFIER().getText(), ElemType.RANGE);
             }
-        } else if (types.get(ctx.IDENTIFIER().getText()) == ElemTypes.ASSESSMENT) {
+        } else if (types.get(ctx.IDENTIFIER().getText()) == ElemType.ASSESSMENT) {
             if (ctx.name().getText().contains("Likelihood")) {
-                types.replace(ctx.IDENTIFIER().getText(), ElemTypes.LIKELIHOOD);
+                types.replace(ctx.IDENTIFIER().getText(), ElemType.LIKELIHOOD);
                 Double chance = Double.parseDouble(ctx.name().getText().replaceAll("[^0-9|.]", ""));
                 values.put(ctx.IDENTIFIER().getText(), chance);
             } else if (ctx.name().getText().contains("Recurrence")) {
-                types.replace(ctx.IDENTIFIER().getText(), ElemTypes.RECURRENCE);
+                types.replace(ctx.IDENTIFIER().getText(), ElemType.RECURRENCE);
                 List<Integer> vals = new ArrayList<>();
                 for (String str : ctx.name().getText().split("-")) {
                     vals.add(Integer.parseInt(str.replaceAll("[^0-9]", "")));
@@ -54,27 +54,27 @@ public class ElementsMapper extends ElementsGrammarBaseVisitor<Object> {
 
     @Override
     public Object visitObject(ElementsGrammarParser.ObjectContext ctx) {
-        return ElemTypes.OBJECT;
+        return ElemType.OBJECT;
     }
 
     @Override
     public Object visitEvent(ElementsGrammarParser.EventContext ctx) {
-        return ElemTypes.EVENT;
+        return ElemType.EVENT;
     }
 
     @Override
     public Object visitOther(ElementsGrammarParser.OtherContext ctx) {
         if (ctx.VALUE() != null) {
-            return ElemTypes.ATTRIBUTE;
+            return ElemType.ATTRIBUTE;
         } else if (ctx.ASSESSMENT() != null) {
-            return ElemTypes.ASSESSMENT;
+            return ElemType.ASSESSMENT;
         } else if (ctx.CONSTRAINT() != null) {
-            return ElemTypes.CONSTRAINT;
+            return ElemType.CONSTRAINT;
         }
         return null;
     }
 
-    public Map<String, ElemTypes> getTypes() {
+    public Map<String, ElemType> getTypes() {
         return types;
     }
 

@@ -16,6 +16,6 @@ public class RelationsGrammarTester {
         TokenStream tokens = new CommonTokenStream(lexer);
         RelationsGrammarParser parser = new RelationsGrammarParser(tokens);
         RelationsGrammarParser.CsvFileContext tree = parser.csvFile();
-        System.out.println(tree.row(6).IDENTIFIER(1).toStringTree());
+        System.out.println(tree.row(11).toStringTree());
     }
 }

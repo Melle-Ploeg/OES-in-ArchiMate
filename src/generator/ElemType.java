@@ -1,6 +1,6 @@
 package generator;
 
-public enum ElemTypes {
+public enum ElemType {
     OBJECT,
     EVENT,
     ATTRIBUTE,
