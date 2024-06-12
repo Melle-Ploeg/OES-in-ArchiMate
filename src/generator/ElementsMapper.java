@@ -13,11 +13,13 @@ public class ElementsMapper extends ElementsGrammarBaseVisitor<Object> {
     private final Map<String, ElemType> types;
     private final Map<String, Double> values;
     private final Map<String, List<Integer>> recurrences;
+    private final Map<String, String> names;
 
     public ElementsMapper() {
         types = new HashMap<>();
         values = new HashMap<>();
         recurrences = new HashMap<>();
+        names = new HashMap<>();
     }
 
     public void runMapper(ParseTree parseTree) {
@@ -27,6 +29,7 @@ public class ElementsMapper extends ElementsGrammarBaseVisitor<Object> {
     @Override
     public Object visitRow(ElementsGrammarParser.RowContext ctx) {
         types.put(ctx.IDENTIFIER().getText(), (ElemType) visit(ctx.type()));
+        names.put(ctx.IDENTIFIER().getText(), ctx.name().getText().replaceAll("[ |\"]", ""));
         if (types.get(ctx.IDENTIFIER().getText()) == ElemType.CONSTRAINT) {
             if (ctx.name().getText().contains("Initial")) {
                 types.replace(ctx.IDENTIFIER().getText(), ElemType.INITIAL);
@@ -84,5 +87,9 @@ public class ElementsMapper extends ElementsGrammarBaseVisitor<Object> {
 
     public Map<String, List<Integer>> getRecurrences() {
         return recurrences;
+    }
+
+    public Map<String, String> getNames() {
+        return names;
     }
 }

@@ -1,7 +1,7 @@
 class Salary extends eVENT {
     constructor({delay, BankAccount}) {
         super(delay);
-        this.bankAccount = BankAccount
+        this.bankAccount = BankAccount;
     }
 
     onEvent() {
