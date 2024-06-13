@@ -91,14 +91,30 @@ public class Generator {
         FileWriter writer = new FileWriter(file.getPath());
 
         List<String> relations = getRelations(id);
-        List<String> objects = getEventObjects(id, relations);
+        List<String> objects = getEventObjects(relations);
         StringBuilder result = new StringBuilder(CodeHelper.eventConstructor(name, objects));
-        result.append("     } \n}");
+        result.append("    } \n");
+
+        result.append("\n   onEvent() {\n" +
+                "       var followUpEvents = [];\n");
+        for (String relId : relations) {
+            if (relationTypes.get(relId) == RelationsType.INFLUENCES) {
+                String objectName = names.get(sourceTarget.get(relId).get(1));
+                Operant op = operants.get(relId);
+                Double value = relationValues.get(relId);
+                result.append(CodeHelper.writeAssignment(name, objectName, op, value));
+            }
+        }
+        result.append("       return followUpEvents;\n" +
+                "   }\n");
+
+        result.append("}");
         writer.append(result);
         writer.flush();
+
     }
 
-    private List<String> getEventObjects(String id, List<String> relations) {
+    private List<String> getEventObjects(List<String> relations) {
         List<String> objects = new ArrayList<>();
         for (String relId : relations) {
             if (relationTypes.get(relId) == RelationsType.ASSOCIATION) {

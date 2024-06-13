@@ -25,4 +25,31 @@ public class CodeHelper {
         return result.toString();
     }
 
+    public static StringBuilder writeAssignment(String objectName, String attrName, Operant op, Double value) {
+        StringBuilder result = new StringBuilder(String.format("       this.%s.%s = this.%s.%s ", objectName, attrName, objectName, attrName));
+        StringBuilder simStat = new StringBuilder(String.format("       sim.stat.%s%s = sim.stat.%s%s ", objectName, attrName, objectName, attrName));
+        switch (op) {
+            case DIV:
+                result.append("/ ");
+                simStat.append("/ ");
+                break;
+            case MULT:
+                result.append("* ");
+                simStat.append("* ");
+                break;
+            case PLUS:
+                result.append("+ ");
+                simStat.append("+ ");
+                break;
+            case MINUS:
+                result.append("- ");
+                simStat.append("- ");
+                break;
+        }
+        result.append(String.format("%s;\n", value));
+        simStat.append(String.format("%s;\n", value));
+        result.append(simStat);
+        return result;
+    }
+
 }
