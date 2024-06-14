@@ -79,6 +79,12 @@ public class Generator {
                 }
             }
         }
+
+        if (recurrences.containsKey(id)) {
+
+        }
+
+
         result.append("     } \n}");
         writer.append(result);
         writer.flush();

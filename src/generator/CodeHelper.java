@@ -52,4 +52,11 @@ public class CodeHelper {
         return result;
     }
 
+    public static String writeRecurrence(String name, List<Integer> recurrences, List<String> objects) {
+        String result = String.format("    createNextEvent() {\n" +
+                "       return new %s({delay");
+
+        return null;
+    }
+
 }
