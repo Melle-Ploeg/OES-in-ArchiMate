@@ -8,6 +8,9 @@ class Salary extends eVent {
        var followUpEvents = [];
        this.Salary.Balance = this.Salary.Balance + 100.0;
        sim.stat.SalaryBalance = sim.stat.SalaryBalance + 100.0;
+       if(Math.random() < null) {
+            followUpEvents.push(new Rent({null: this.null}));
+       }
        return followUpEvents;
    }
     createNextEvent() {

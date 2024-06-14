@@ -26,6 +26,7 @@ public class Generator {
     private final Map<String, Double> relationValues;
     private final Map<String, Operant> operants;
     private final Map<String, String> attrToObj;
+    private final Map<String, List<String>> objAttrs;
 
     public Generator(ParseTree elementTree, ParseTree relationTree) {
         ElementsMapper elMapper = new ElementsMapper();
@@ -43,6 +44,29 @@ public class Generator {
         operants = relMapper.getOperants();
 
         attrToObj = new HashMap<>();
+        objAttrs = new HashMap<>();
+        buildObjAttrs();
+    }
+
+    private void buildObjAttrs() {
+        for (String id : elementTypes.keySet()) {
+            if (elementTypes.get(id) == ElemType.OBJECT) {
+                List<String> attributeIds = new ArrayList<>();
+                List<String> objectRels = getRelations(id);
+                for (String relId : objectRels) {
+                    List<String> elIds = sourceTarget.get(relId);
+                    if (relationTypes.get(relId) == RelationsType.ASSOCIATION) {
+                        for (String i : elIds) {
+                            if (elementTypes.get(i) == ElemType.ATTRIBUTE) {
+                                attributeIds.add(i);
+                                attrToObj.put(i, id);
+                            }
+                        }
+                    }
+                }
+                objAttrs.put(id, attributeIds);
+            }
+        }
     }
 
     public void genObject(String id) throws IOException {
@@ -52,19 +76,7 @@ public class Generator {
         FileWriter writer = new FileWriter(file.getPath());
         StringBuilder result = new StringBuilder(CodeHelper.objectConstructor(name));
 
-        List<String> attributeIds = new ArrayList<>();
-        List<String> objectRels = getRelations(id);
-        for (String relId : objectRels) {
-            List<String> elIds = sourceTarget.get(relId);
-            if (relationTypes.get(relId) == RelationsType.ASSOCIATION) {
-                for (String i : elIds) {
-                    if (elementTypes.get(i) == ElemType.ATTRIBUTE) {
-                        attributeIds.add(i);
-                        attrToObj.put(i, id);
-                    }
-                }
-            }
-        }
+        List<String> attributeIds = objAttrs.get(id);
 
         for (String attrId : attributeIds) {
             List<String> attrRels = getRelations(attrId);
@@ -105,14 +117,43 @@ public class Generator {
                 result.append(CodeHelper.writeAssignment(name, objectName, op, value));
             }
         }
+
+        //TODO: fix issue where association with triggering relation is not found
+
+        for (String relId : relations) {
+            if (relationTypes.get(relId) == RelationsType.TRIGGERING) {
+                Double likelihood = getLikelihood(relId);
+                String subjectName = names.get(sourceTarget.get(relId).get(1));
+                List<String> argNames = new ArrayList<>();
+                for (String argId : getEventObjects(getRelations(sourceTarget.get(relId).get(1)))) {
+                    argNames.add(names.get(argId));
+                }
+                result.append(CodeHelper.writeEventTrigger(subjectName, likelihood, argNames));
+            }
+        }
+
         result.append("       return followUpEvents;\n" +
                 "   }\n");
 
         result.append(CodeHelper.writeRecurrence(name, getRecurrence(relations), objects));
+
         result.append("}");
         writer.append(result);
         writer.flush();
 
+    }
+
+    private Double getLikelihood(String relId) {
+        for (String relId2 : getRelations(relId)) {
+            for (String id : sourceTarget.get(relId2)) {
+                if (elementValues.containsKey(id)) {
+                    return elementValues.get(id) / 100;
+                } else {
+                    return 1.0;
+                }
+            }
+        }
+        return null;
     }
 
     private List<Integer> getRecurrence(List<String> relations) {

@@ -70,4 +70,18 @@ public class CodeHelper {
         return result;
     }
 
+    public static StringBuilder writeEventTrigger(String subjectName, Double likelihood, List<String> argNames) {
+        StringBuilder result = new StringBuilder();
+        result.append(String.format("       if(Math.random() < %s) {\n    ", likelihood));
+        result.append(String.format("        followUpEvents.push(new %s({", subjectName));
+        for (int i = 0; i < argNames.size(); i++) {
+            result.append(String.format("%s: this.%s", argNames.get(i), argNames.get(i)));
+            if (!(i == argNames.size() - 1)) {
+                result.append(", ");
+            }
+        }
+        result.append("}));\n       }\n");
+        return result;
+    }
+
 }
