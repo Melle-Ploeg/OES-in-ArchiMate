@@ -10,4 +10,10 @@ class Salary extends eVent {
        sim.stat.SalaryBalance = sim.stat.SalaryBalance + 100.0;
        return followUpEvents;
    }
+    createNextEvent() {
+       return new Salary({delay: Salary.recurrence(), BankAccount: this.BankAccount});
+    }
+    static recurrence() {
+        return 5;
+    }
 }

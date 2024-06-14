@@ -52,11 +52,22 @@ public class CodeHelper {
         return result;
     }
 
-    public static String writeRecurrence(String name, List<Integer> recurrences, List<String> objects) {
-        String result = String.format("    createNextEvent() {\n" +
-                "       return new %s({delay");
+    public static StringBuilder writeRecurrence(String name, List<Integer> recurrences, List<String> objects) {
+        StringBuilder result = new StringBuilder(String.format("    createNextEvent() {\n" +
+                "       return new %s({delay: %s.recurrence()", name, name));
+        for (String arg : objects) {
+            result.append(String.format(", %s: this.%s", arg, arg));
+        }
+        result.append("});\n    }\n");
 
-        return null;
+        result.append("    static recurrence() {\n");
+        if (recurrences.size() == 1) {
+            result.append(String.format("        return %s;\n", recurrences.getFirst()));
+        } else {
+            result.append(String.format("return math.getUniformRandomInteger(%s, %s);\n", recurrences.getFirst(), recurrences.get(1)));
+        }
+        result.append("    }\n");
+        return result;
     }
 
 }

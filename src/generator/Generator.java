@@ -79,12 +79,6 @@ public class Generator {
                 }
             }
         }
-
-        if (recurrences.containsKey(id)) {
-
-        }
-
-
         result.append("     } \n}");
         writer.append(result);
         writer.flush();
@@ -114,10 +108,22 @@ public class Generator {
         result.append("       return followUpEvents;\n" +
                 "   }\n");
 
+        result.append(CodeHelper.writeRecurrence(name, getRecurrence(relations), objects));
         result.append("}");
         writer.append(result);
         writer.flush();
 
+    }
+
+    private List<Integer> getRecurrence(List<String> relations) {
+        for (String relId : relations) {
+            if (recurrences.containsKey(sourceTarget.get(relId).get(0))) {
+                return recurrences.get(sourceTarget.get(relId).getFirst());
+            } else if(recurrences.containsKey(sourceTarget.get(relId).get(1))) {
+                return recurrences.get(sourceTarget.get(relId).get(1));
+            }
+        }
+        return null;
     }
 
     private List<String> getEventObjects(List<String> relations) {
@@ -125,7 +131,7 @@ public class Generator {
         for (String relId : relations) {
             if (relationTypes.get(relId) == RelationsType.ASSOCIATION) {
                 if (elementTypes.get(sourceTarget.get(relId).get(0)) == ElemType.OBJECT) {
-                    objects.add(names.get(sourceTarget.get(relId).get(0)));
+                    objects.add(names.get(sourceTarget.get(relId).getFirst()));
                 } else if (elementTypes.get(sourceTarget.get(relId).get(1)) == ElemType.OBJECT) {
                     objects.add(names.get(sourceTarget.get(relId).get(1)));
                 }
