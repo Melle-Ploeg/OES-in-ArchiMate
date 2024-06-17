@@ -18,8 +18,8 @@ public class RelationsGrammarParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, ASSOCIATIONRELATIONSHIP=4, INFLUENCERELATIONSHIP=5, 
-		TRIGGERINGRELATIONSHIP=6, PLUS=7, MINUS=8, MULT=9, DIV=10, ID=11, IDENTIFIER=12, 
-		STRING=13;
+		TRIGGERINGRELATIONSHIP=6, PLUS=7, MINUS=8, MULT=9, DIV=10, ASS=11, ID=12, 
+		IDENTIFIER=13, STRING=14;
 	public static final int
 		RULE_csvFile = 0, RULE_hdr = 1, RULE_row = 2, RULE_field = 3, RULE_name = 4, 
 		RULE_type = 5;
@@ -33,15 +33,15 @@ public class RelationsGrammarParser extends Parser {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, "','", "'\\r'", "'\\n'", "'\"AssociationRelationship\"'", "'\"InfluenceRelationship\"'", 
-			"'\"TriggeringRelationship\"'", "'+'", "'-'", "'*'", "'/'", "'id-'"
+			"'\"TriggeringRelationship\"'", "'+'", "'-'", "'*'", "'/'", "'='", "'id-'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, "ASSOCIATIONRELATIONSHIP", "INFLUENCERELATIONSHIP", 
-			"TRIGGERINGRELATIONSHIP", "PLUS", "MINUS", "MULT", "DIV", "ID", "IDENTIFIER", 
-			"STRING"
+			"TRIGGERINGRELATIONSHIP", "PLUS", "MINUS", "MULT", "DIV", "ASS", "ID", 
+			"IDENTIFIER", "STRING"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -493,7 +493,7 @@ public class RelationsGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\r@\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u000e@\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0001\u0000\u0001\u0000\u0004\u0000\u000f\b\u0000\u000b"+
 		"\u0000\f\u0000\u0010\u0001\u0000\u0001\u0000\u0001\u0001\u0001\u0001\u0001"+
@@ -520,17 +520,17 @@ public class RelationsGrammarParser extends Parser {
 		"\u001e\u001f\u0003\u0006\u0003\u0000\u001f \u0005\u0001\u0000\u0000 \""+
 		"\u0003\u0006\u0003\u0000!#\u0005\u0002\u0000\u0000\"!\u0001\u0000\u0000"+
 		"\u0000\"#\u0001\u0000\u0000\u0000#$\u0001\u0000\u0000\u0000$%\u0005\u0003"+
-		"\u0000\u0000%\u0003\u0001\u0000\u0000\u0000&\'\u0005\f\u0000\u0000\'("+
+		"\u0000\u0000%\u0003\u0001\u0000\u0000\u0000&\'\u0005\r\u0000\u0000\'("+
 		"\u0005\u0001\u0000\u0000()\u0003\n\u0005\u0000)*\u0005\u0001\u0000\u0000"+
 		"*+\u0003\b\u0004\u0000+,\u0005\u0001\u0000\u0000,-\u0003\u0006\u0003\u0000"+
-		"-.\u0005\u0001\u0000\u0000./\u0005\f\u0000\u0000/0\u0005\u0001\u0000\u0000"+
-		"01\u0005\f\u0000\u000012\u0005\u0001\u0000\u000024\u0003\u0006\u0003\u0000"+
+		"-.\u0005\u0001\u0000\u0000./\u0005\r\u0000\u0000/0\u0005\u0001\u0000\u0000"+
+		"01\u0005\r\u0000\u000012\u0005\u0001\u0000\u000024\u0003\u0006\u0003\u0000"+
 		"35\u0005\u0002\u0000\u000043\u0001\u0000\u0000\u000045\u0001\u0000\u0000"+
 		"\u000057\u0001\u0000\u0000\u000068\u0005\u0003\u0000\u000076\u0001\u0000"+
 		"\u0000\u000078\u0001\u0000\u0000\u00008\u0005\u0001\u0000\u0000\u0000"+
-		"9:\u0005\r\u0000\u0000:\u0007\u0001\u0000\u0000\u0000;<\u0005\r\u0000"+
-		"\u0000<\t\u0001\u0000\u0000\u0000=>\u0007\u0000\u0000\u0000>\u000b\u0001"+
-		"\u0000\u0000\u0000\u0004\u0010\"47";
+		"9:\u0005\u000e\u0000\u0000:\u0007\u0001\u0000\u0000\u0000;<\u0005\u000e"+
+		"\u0000\u0000<\t\u0001\u0000\u0000\u0000=>\u0007\u0000\u0000\u0000>\u000b"+
+		"\u0001\u0000\u0000\u0000\u0004\u0010\"47";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

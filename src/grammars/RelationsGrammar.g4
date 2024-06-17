@@ -16,10 +16,11 @@ INFLUENCERELATIONSHIP : '"InfluenceRelationship"';
 TRIGGERINGRELATIONSHIP : '"TriggeringRelationship"';
 
 
-PLUS : '+';
-MINUS : '-';
-MULT : '*';
-DIV : '/';
+PLUS : '+' ;
+MINUS : '-' ;
+MULT : '*' ;
+DIV : '/' ;
+ASS : '=' ;
 ID : 'id-';
 IDENTIFIER : '"' ID (LOWERCASE | DIGIT)+ '"' ;
 STRING : '"' ('""' | ~'"')* '"' ;

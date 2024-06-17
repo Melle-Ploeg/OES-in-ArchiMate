@@ -101,6 +101,8 @@ public class RelationsMapper extends RelationsGrammarBaseVisitor<Object> {
             return Operant.MULT;
         } else if (str.contains("/")) {
             return Operant.DIV;
+        } else if (str.contains("=")) {
+            return Operant.ASS;
         }
         return null;
     }

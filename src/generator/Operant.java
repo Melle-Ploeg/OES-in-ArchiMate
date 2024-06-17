@@ -4,5 +4,6 @@ public enum Operant {
     MINUS,
     PLUS,
     MULT,
-    DIV
+    DIV,
+    ASS
 }
