@@ -27,6 +27,7 @@ public class Generator {
     private final Map<String, Operant> operants;
     private final Map<String, String> attrToObj;
     private final Map<String, List<String>> objAttrs;
+    private final Map<String, Double> attrInitials;
 
     public Generator(ParseTree elementTree, ParseTree relationTree) {
         ElementsMapper elMapper = new ElementsMapper();
@@ -45,7 +46,49 @@ public class Generator {
 
         attrToObj = new HashMap<>();
         objAttrs = new HashMap<>();
+        attrInitials = new HashMap<>();
         buildObjAttrs();
+    }
+
+    public void genSim() throws IOException {
+        List<String> events = new ArrayList<>();
+        List<String> objects = new ArrayList<>();
+        for (String elId : elementTypes.keySet()) {
+            if (elementTypes.get(elId) == ElemType.OBJECT) {
+                objects.add(elId);
+            } else if (elementTypes.get(elId) == ElemType.EVENT) {
+                events.add(elId);
+            }
+        }
+        setAttrInitials(objects);
+        for (String id : events) {
+            genEvent(id);
+        }
+        for (String id : objects) {
+            genObject(id);
+        }
+        File file = new File("src\\generatedSim\\simulation.js");
+        FileWriter writer = new FileWriter(file.getPath());
+        StringBuilder simulationText = new StringBuilder();
+        List<String> eventNames = new ArrayList<>();
+        List<String> objectNames = new ArrayList<>();
+        for (String id : events) {
+            eventNames.add(names.get(id));
+        }
+        for (String id : objects) {
+            objectNames.add(names.get(id));
+        }
+        //TODO: get time limit properly
+        simulationText.append(CodeHelper.writeSimulationSetup(objectNames, eventNames, 10));
+        simulationText.append(CodeHelper.writeObjectDeclaration(objects, names));
+        for (String startEvent : findStartEvents(events)) {
+            simulationText.append(CodeHelper.writeStartEvent(names.get(startEvent), getEventObjects(getRelations(startEvent))));
+        }
+        simulationText.append("}\n");
+        simulationText.append(CodeHelper.writeStatisticSetup(objAttrs, names, attrInitials));
+
+        writer.append(simulationText);
+        writer.flush();
     }
 
     private void buildObjAttrs() {
@@ -69,6 +112,25 @@ public class Generator {
         }
     }
 
+    private void setAttrInitials(List<String> objects) {
+        for (String objId : objects) {
+            List<String> attributeIds = objAttrs.get(objId);
+            for (String attrId : attributeIds) {
+                List<String> attrRels = getRelations(attrId);
+                for (String relId : attrRels) {
+                    List<String> elIds = sourceTarget.get(relId);
+                    if (relationTypes.get(relId) == RelationsType.ASSOCIATION) {
+                        for (String i : elIds) {
+                            if (elementTypes.get(i) == ElemType.INITIAL) {
+                                attrInitials.put(attrId, elementValues.get(i));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void genObject(String id) throws IOException {
         String name = names.get(id).replaceAll(" ", "");
         name = name.replaceAll("\"", "");
@@ -77,19 +139,8 @@ public class Generator {
         StringBuilder result = new StringBuilder(CodeHelper.objectConstructor(name));
 
         List<String> attributeIds = objAttrs.get(id);
-
         for (String attrId : attributeIds) {
-            List<String> attrRels = getRelations(attrId);
-            for (String relId : attrRels) {
-                List<String> elIds = sourceTarget.get(relId);
-                if (relationTypes.get(relId) == RelationsType.ASSOCIATION) {
-                    for (String i : elIds) {
-                        if (elementTypes.get(i) == ElemType.INITIAL) {
-                            result.append(String.format("       this.%s = %s;\n", names.get(attrId), elementValues.get(i)));
-                        }
-                    }
-                }
-            }
+            result.append(String.format("       this.%s = %s;\n", names.get(attrId), attrInitials.get(attrId)));
         }
         result.append("     } \n}");
         writer.append(result);
@@ -111,31 +162,31 @@ public class Generator {
                 "       var followUpEvents = [];\n");
         for (String relId : relations) {
             if (relationTypes.get(relId) == RelationsType.INFLUENCES) {
-                String objectName = names.get(sourceTarget.get(relId).get(1));
+                String attrId = sourceTarget.get(relId).get(1);
+                String attrName = names.get(attrId);
                 Operant op = operants.get(relId);
                 Double value = relationValues.get(relId);
-                result.append(CodeHelper.writeAssignment(name, objectName, op, value));
+                result.append(CodeHelper.writeAssignment(names.get(attrToObj.get(attrId)), attrName, op, value));
             }
         }
-
-        //TODO: fix issue where association with triggering relation is not found
 
         for (String relId : relations) {
             if (relationTypes.get(relId) == RelationsType.TRIGGERING) {
                 Double likelihood = getLikelihood(relId);
-                String subjectName = names.get(sourceTarget.get(relId).get(1));
-                List<String> argNames = new ArrayList<>();
-                for (String argId : getEventObjects(getRelations(sourceTarget.get(relId).get(1)))) {
-                    argNames.add(names.get(argId));
+                if (likelihood == null) {
+                    likelihood = 1.0;
                 }
-                result.append(CodeHelper.writeEventTrigger(subjectName, likelihood, argNames));
+                String subjectName = names.get(sourceTarget.get(relId).get(1));
+                result.append(CodeHelper.writeEventTrigger(subjectName, likelihood, getEventObjects(getRelations(sourceTarget.get(relId).get(1)))));
             }
         }
 
         result.append("       return followUpEvents;\n" +
                 "   }\n");
 
-        result.append(CodeHelper.writeRecurrence(name, getRecurrence(relations), objects));
+        if (recurrences.containsKey(id)) {
+            result.append(CodeHelper.writeRecurrence(name, getRecurrence(relations), objects));
+        }
 
         result.append("}");
         writer.append(result);
@@ -159,7 +210,7 @@ public class Generator {
     private List<Integer> getRecurrence(List<String> relations) {
         for (String relId : relations) {
             if (recurrences.containsKey(sourceTarget.get(relId).get(0))) {
-                return recurrences.get(sourceTarget.get(relId).getFirst());
+                return recurrences.get(sourceTarget.get(relId).get(0));
             } else if(recurrences.containsKey(sourceTarget.get(relId).get(1))) {
                 return recurrences.get(sourceTarget.get(relId).get(1));
             }
@@ -172,7 +223,7 @@ public class Generator {
         for (String relId : relations) {
             if (relationTypes.get(relId) == RelationsType.ASSOCIATION) {
                 if (elementTypes.get(sourceTarget.get(relId).get(0)) == ElemType.OBJECT) {
-                    objects.add(names.get(sourceTarget.get(relId).getFirst()));
+                    objects.add(names.get(sourceTarget.get(relId).get(0)));
                 } else if (elementTypes.get(sourceTarget.get(relId).get(1)) == ElemType.OBJECT) {
                     objects.add(names.get(sourceTarget.get(relId).get(1)));
                 }
@@ -185,6 +236,22 @@ public class Generator {
         List<String> result = new ArrayList<>();
         for (String relId : sourceTarget.keySet()) {
             if (sourceTarget.get(relId).contains(id)) {
+                result.add(relId);
+            }
+        }
+        return result;
+    }
+
+    private List<String> findStartEvents(List<String> events) {
+        List<String> result = new ArrayList<>();
+        List<String> nonStart = new ArrayList<>();
+        for (String relId : sourceTarget.keySet()) {
+            if (relationTypes.get(relId) == RelationsType.TRIGGERING) {
+                nonStart.add(sourceTarget.get(relId).get(1));
+            }
+        }
+        for (String relId : events) {
+            if (!nonStart.contains(relId)) {
                 result.add(relId);
             }
         }
@@ -207,8 +274,7 @@ public class Generator {
         ParseTree relationsTree = relationsParser.csvFile();
 
         Generator gen = new Generator(elementsTree, relationsTree);
-        gen.genObject("\"id-369163e55b7a4bc2b87629ba91edb51c\"");
-        gen.genEvent("\"id-c0745dc9412145a4920db1865e7e3af2\"");
+        gen.genSim();
     }
 
 }

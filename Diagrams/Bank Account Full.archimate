@@ -5,24 +5,19 @@
     <element xsi:type="archimate:BusinessObject" name="Bank Account" id="id-369163e55b7a4bc2b87629ba91edb51c"/>
     <element xsi:type="archimate:BusinessEvent" name="Salary" id="id-c0745dc9412145a4920db1865e7e3af2"/>
     <element xsi:type="archimate:BusinessEvent" name="Rent" id="id-25c45a03d1f0418e86ec87d538956305"/>
-    <element xsi:type="archimate:BusinessEvent" name="Find money on the street" id="id-72dc292e4f904196a77ee5ef5a9da389"/>
     <element xsi:type="archimate:BusinessEvent" name="Go To The Pub" id="id-15fa85f3bd3a4a92938000fdb7ccde44"/>
   </folder>
   <folder name="Application" id="id-e8f5d3057d11448c8856177551a1e728" type="application"/>
   <folder name="Technology &amp; Physical" id="id-dbd85af2da524a7695cfd6c0169f5bbf" type="technology"/>
   <folder name="Motivation" id="id-a01f4f788a6e464f9e3f444b605e62df" type="motivation">
     <element xsi:type="archimate:Value" name="Balance" id="id-c8273284c7ee45df9ce4d9f30353e77e"/>
-    <element xsi:type="archimate:Constraint" name="&lt;&lt;Type>> Integer" id="id-748cb95d20ad496e8e65566fdc7d4aa4"/>
     <element xsi:type="archimate:Constraint" name="&lt;&lt;Initial>> 0" id="id-bc581a5d50d14e718112b0685a8cb38c"/>
     <element xsi:type="archimate:Assessment" name="&lt;&lt;Recurrence>> 5" id="id-2aae8255682d4bc9ade2eea51117c720"/>
-    <element xsi:type="archimate:Constraint" name="&lt;&lt;Limit>> 100" id="id-67228726ad114cf292e5b430d17b9668"/>
     <element xsi:type="archimate:Assessment" name="&lt;&lt;Likelihood>> 20%" id="id-677cb43207a1494eba82e003189a083a"/>
-    <element xsi:type="archimate:Assessment" name="&lt;&lt;Start Event>>" id="id-557099b6d7724869895b2e3b7047535d"/>
   </folder>
   <folder name="Implementation &amp; Migration" id="id-5c023a29151d412d84faa450ca515408" type="implementation_migration"/>
   <folder name="Other" id="id-fc4dc0c574514af394acdf53e15c0415" type="other"/>
   <folder name="Relations" id="id-31fa027ad4ca494ebc937f444f3950da" type="relations">
-    <element xsi:type="archimate:AssociationRelationship" id="id-9c65bb521aa041699debeaa802dfc8b7" source="id-c8273284c7ee45df9ce4d9f30353e77e" target="id-748cb95d20ad496e8e65566fdc7d4aa4"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-70df43658f274694bd65a4bd4301046f" source="id-369163e55b7a4bc2b87629ba91edb51c" target="id-c8273284c7ee45df9ce4d9f30353e77e"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-fa9cbecc3c9d43a5a46b7c71ecb8408c" source="id-bc581a5d50d14e718112b0685a8cb38c" target="id-c8273284c7ee45df9ce4d9f30353e77e"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-976037055cdd4559b2ab3be7b83b2968" source="id-c0745dc9412145a4920db1865e7e3af2" target="id-369163e55b7a4bc2b87629ba91edb51c"/>
@@ -30,14 +25,10 @@
     <element xsi:type="archimate:TriggeringRelationship" id="id-e2d24d364ee442ba808d1b2e02cafb46" source="id-c0745dc9412145a4920db1865e7e3af2" target="id-25c45a03d1f0418e86ec87d538956305"/>
     <element xsi:type="archimate:InfluenceRelationship" name="-80" id="id-cbf0c781c079423492d0f92f085a6231" source="id-25c45a03d1f0418e86ec87d538956305" target="id-c8273284c7ee45df9ce4d9f30353e77e"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-0a17896f5e74425092f472d7cb18b22b" source="id-25c45a03d1f0418e86ec87d538956305" target="id-369163e55b7a4bc2b87629ba91edb51c"/>
-    <element xsi:type="archimate:AssociationRelationship" id="id-c8bfe17a6b834d18a8ce83a2d5595c84" source="id-72dc292e4f904196a77ee5ef5a9da389" target="id-369163e55b7a4bc2b87629ba91edb51c"/>
-    <element xsi:type="archimate:InfluenceRelationship" name="+10" id="id-dcd5c30e3c904efb9c55f3e3e8d68e85" source="id-72dc292e4f904196a77ee5ef5a9da389" target="id-c8273284c7ee45df9ce4d9f30353e77e"/>
-    <element xsi:type="archimate:AssociationRelationship" id="id-a5ce57186ae24c778f99523c64fa050d" source="id-2aae8255682d4bc9ade2eea51117c720" target="id-72dc292e4f904196a77ee5ef5a9da389"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-a4f421224fd548d8a007ed3147ac830f" source="id-2aae8255682d4bc9ade2eea51117c720" target="id-c0745dc9412145a4920db1865e7e3af2"/>
     <element xsi:type="archimate:TriggeringRelationship" id="id-7f7381386b334166be3c9a8f2fec18ce" source="id-25c45a03d1f0418e86ec87d538956305" target="id-15fa85f3bd3a4a92938000fdb7ccde44"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-8da933862a964f4c9886120881206dcf" source="id-677cb43207a1494eba82e003189a083a" target="id-7f7381386b334166be3c9a8f2fec18ce"/>
     <element xsi:type="archimate:InfluenceRelationship" name="-30" id="id-c249d17b3f0e409daf848ecaf3044e32" source="id-15fa85f3bd3a4a92938000fdb7ccde44" target="id-c8273284c7ee45df9ce4d9f30353e77e"/>
-    <element xsi:type="archimate:AssociationRelationship" id="id-a73da68c81074e5d857f8d9618db35d1" source="id-557099b6d7724869895b2e3b7047535d" target="id-c0745dc9412145a4920db1865e7e3af2"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-704b5db94a384032b37a959e4a86f463" source="id-15fa85f3bd3a4a92938000fdb7ccde44" target="id-369163e55b7a4bc2b87629ba91edb51c"/>
   </folder>
   <folder name="Views" id="id-eb31a3c36e38413b913b89ed05b9f34e" type="diagrams">

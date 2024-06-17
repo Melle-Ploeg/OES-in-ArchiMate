@@ -26,7 +26,7 @@
     <element xsi:type="archimate:AssociationRelationship" id="id-70df43658f274694bd65a4bd4301046f" source="id-369163e55b7a4bc2b87629ba91edb51c" target="id-c8273284c7ee45df9ce4d9f30353e77e"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-fa9cbecc3c9d43a5a46b7c71ecb8408c" source="id-bc581a5d50d14e718112b0685a8cb38c" target="id-c8273284c7ee45df9ce4d9f30353e77e"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-976037055cdd4559b2ab3be7b83b2968" source="id-c0745dc9412145a4920db1865e7e3af2" target="id-369163e55b7a4bc2b87629ba91edb51c"/>
-    <element xsi:type="archimate:InfluenceRelationship" name="+ 00" id="id-ee3ffc7d079f4c86b7970fd2b4875233" source="id-c0745dc9412145a4920db1865e7e3af2" target="id-c8273284c7ee45df9ce4d9f30353e77e"/>
+    <element xsi:type="archimate:InfluenceRelationship" name="+100" id="id-ee3ffc7d079f4c86b7970fd2b4875233" source="id-c0745dc9412145a4920db1865e7e3af2" target="id-c8273284c7ee45df9ce4d9f30353e77e"/>
     <element xsi:type="archimate:TriggeringRelationship" id="id-e2d24d364ee442ba808d1b2e02cafb46" source="id-c0745dc9412145a4920db1865e7e3af2" target="id-25c45a03d1f0418e86ec87d538956305"/>
     <element xsi:type="archimate:InfluenceRelationship" name="-80" id="id-cbf0c781c079423492d0f92f085a6231" source="id-25c45a03d1f0418e86ec87d538956305" target="id-c8273284c7ee45df9ce4d9f30353e77e"/>
     <element xsi:type="archimate:AssociationRelationship" id="id-0a17896f5e74425092f472d7cb18b22b" source="id-25c45a03d1f0418e86ec87d538956305" target="id-369163e55b7a4bc2b87629ba91edb51c"/>
