@@ -96,7 +96,7 @@ public class Generator {
         simulationText.append(CodeHelper.writeSimulationSetup(objectNames, eventNames, askTimeLimit()));
         simulationText.append(CodeHelper.writeObjectDeclaration(objects, names));
         for (String startEvent : findStartEvents(events)) {
-            simulationText.append(CodeHelper.writeStartEvent(names.get(startEvent), getEventObjects(getRelations(startEvent))));
+            simulationText.append(CodeHelper.writeStartEvent(names.get(startEvent), getEventObjects(startEvent)));
         }
         simulationText.append("}\n");
         simulationText.append(CodeHelper.writeStatisticSetup(objAttrs, names, attrInitials));
@@ -199,7 +199,7 @@ public class Generator {
         FileWriter writer = new FileWriter(file.getPath());
 
         List<String> relations = getRelations(id);
-        List<String> objects = getEventObjects(relations);
+        List<String> objects = getEventObjects(id);
         StringBuilder result = new StringBuilder(CodeHelper.eventConstructor(name, objects));
         result.append("    } \n");
 
@@ -223,7 +223,7 @@ public class Generator {
                     likelihood = 1.0;
                 }
                 String subjectName = names.get(sourceTarget.get(relId).get(1));
-                result.append(CodeHelper.writeEventTrigger(subjectName, likelihood, getEventObjects(getRelations(sourceTarget.get(relId).get(1)))));
+                result.append(CodeHelper.writeEventTrigger(subjectName, likelihood, getEventObjects(sourceTarget.get(relId).get(1))));
             }
         }
 
@@ -276,11 +276,11 @@ public class Generator {
 
     /**
      * Get the objects used by an event
-     * @param relations Relations of event in question
+     * @param id Event's id
      * @return List of object names
      */
-    private List<String> getEventObjects(List<String> relations) {
-        //TODO: also get objects used by triggered events
+    private List<String> getEventObjects(String id) {
+        List<String> relations = getRelations(id);
         List<String> objects = new ArrayList<>();
         for (String relId : relations) {
             if (relationTypes.get(relId) == RelationsType.ASSOCIATION) {
@@ -291,7 +291,27 @@ public class Generator {
                 }
             }
         }
-        return objects;
+        for (String triggeredId : findEventTriggerees(id)) {
+            objects.addAll(getEventObjects(triggeredId));
+        }
+        Set<String> temp = new HashSet<>(objects);
+        return new ArrayList<>(temp);
+    }
+
+    /**
+     * Gets a list of all events triggered by the given event
+     * @param id Event ID
+     * @return List of triggered event IDs
+     */
+    private List<String> findEventTriggerees(String id) {
+        List<String> relations = getRelations(id);
+        List<String> result = new ArrayList<>();
+        for (String relId : relations) {
+            if (relationTypes.get(relId) == RelationsType.TRIGGERING && sourceTarget.get(relId).get(0).equals(id)) {
+                result.addAll(getEventObjects(sourceTarget.get(relId).get(1)));
+            }
+        }
+        return result;
     }
 
     /**
