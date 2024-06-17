@@ -14,10 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Generator {
     private final Map<String, ElemType> elementTypes;
@@ -56,10 +53,7 @@ public class Generator {
     }
 
     public void genSim() throws IOException {
-        Path simWorkerTarget = Paths.get(targetLocation + "\\simulation-worker.js");
-        Path sourcePath = Paths.get("src\\generator\\simulation-worker.js");
-        Files.copy(sourcePath, simWorkerTarget, StandardCopyOption.REPLACE_EXISTING);
-
+        copyStandardFiles();
         List<String> events = new ArrayList<>();
         List<String> objects = new ArrayList<>();
         for (String elId : elementTypes.keySet()) {
@@ -87,8 +81,7 @@ public class Generator {
         for (String id : objects) {
             objectNames.add(names.get(id));
         }
-        //TODO: get time limit properly
-        simulationText.append(CodeHelper.writeSimulationSetup(objectNames, eventNames, 20));
+        simulationText.append(CodeHelper.writeSimulationSetup(objectNames, eventNames, askTimeLimit()));
         simulationText.append(CodeHelper.writeObjectDeclaration(objects, names));
         for (String startEvent : findStartEvents(events)) {
             simulationText.append(CodeHelper.writeStartEvent(names.get(startEvent), getEventObjects(getRelations(startEvent))));
@@ -98,6 +91,16 @@ public class Generator {
 
         writer.append(simulationText);
         writer.flush();
+    }
+
+    private void copyStandardFiles() throws IOException {
+        Path simWorkerTarget = Paths.get(targetLocation + "\\simulation-worker.js");
+        Path simWorkerSource = Paths.get("src\\generator\\simulation-worker.js");
+        Files.copy(simWorkerSource, simWorkerTarget, StandardCopyOption.REPLACE_EXISTING);
+
+        Path indexTarget = Paths.get(targetLocation + "\\index.html");
+        Path indexSource = Paths.get("src\\generator\\index.html");
+        Files.copy(indexSource, indexTarget, StandardCopyOption.REPLACE_EXISTING);
     }
 
     private void buildObjAttrs() {
@@ -284,6 +287,23 @@ public class Generator {
 
         Generator gen = new Generator(elementsTree, relationsTree);
         gen.genSim();
+    }
+
+    public static Integer askTimeLimit() {
+        Scanner scanner = new Scanner(System.in);
+        boolean success = false;
+        Integer result = null;
+        System.out.println("Please enter a time limit (in simulation turns): ");
+        while (!success) {
+            try {
+                success = true;
+                result = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Incorrect input, please enter a whole number.");
+                success = false;
+            }
+        }
+        return result;
     }
 
 }
