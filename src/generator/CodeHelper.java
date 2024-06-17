@@ -7,8 +7,8 @@ public class CodeHelper {
 
     public static String objectConstructor(String name) {
         String result = String.format("class %s extends oBJECT { \n", name);
-        result += "   constructor({id, name}) { \n";
-        result += "   super(id, name);\n";
+        result += "    constructor({id, name}) { \n";
+        result += "        super(id, name);\n";
         return result;
     }
 
@@ -19,7 +19,7 @@ public class CodeHelper {
             result.append(String.format(", %s", s));
         }
         result.append("}) {\n" +
-                "       super(delay);\n");
+                "       super({delay: delay});\n");
         for (String s : objects) {
             result.append(String.format("       this.%s = %s;\n", s, s));
         }
@@ -113,7 +113,7 @@ public class CodeHelper {
         StringBuilder result = new StringBuilder();
         for (String objId : objIds) {
             String name = names.get(objId);
-            result.append(String.format("    var %s = new %s({id: %s, name: \"%s\"});\n",
+            result.append(String.format("    var %sDef = new %s({id: %s, name: \"%s\"});\n",
                     name, name, objId, name));
         }
         return result;
@@ -122,7 +122,7 @@ public class CodeHelper {
     public static StringBuilder writeStartEvent(String eventName, List<String> arguments) {
         StringBuilder result = new StringBuilder(String.format("    sim.FEL.add(new %s({delay:0", eventName));
         for (String argument : arguments) {
-            result.append(String.format(", %s: this.%s", argument, argument));
+            result.append(String.format(", %s: %sDef", argument, argument));
         }
         result.append("}));\n");
         return result;

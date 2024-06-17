@@ -10,7 +10,10 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +31,8 @@ public class Generator {
     private final Map<String, String> attrToObj;
     private final Map<String, List<String>> objAttrs;
     private final Map<String, Double> attrInitials;
+
+    private final String targetLocation = "C:\\Users\\melle\\IdeaProjects\\oes\\JavaScript\\Core0\\Generated\\";
 
     public Generator(ParseTree elementTree, ParseTree relationTree) {
         ElementsMapper elMapper = new ElementsMapper();
@@ -51,6 +56,10 @@ public class Generator {
     }
 
     public void genSim() throws IOException {
+        Path simWorkerTarget = Paths.get(targetLocation + "\\simulation-worker.js");
+        Path sourcePath = Paths.get("src\\generator\\simulation-worker.js");
+        Files.copy(sourcePath, simWorkerTarget, StandardCopyOption.REPLACE_EXISTING);
+
         List<String> events = new ArrayList<>();
         List<String> objects = new ArrayList<>();
         for (String elId : elementTypes.keySet()) {
@@ -67,7 +76,7 @@ public class Generator {
         for (String id : objects) {
             genObject(id);
         }
-        File file = new File("src\\generatedSim\\simulation.js");
+        File file = new File(targetLocation + "simulation.js");
         FileWriter writer = new FileWriter(file.getPath());
         StringBuilder simulationText = new StringBuilder();
         List<String> eventNames = new ArrayList<>();
@@ -79,7 +88,7 @@ public class Generator {
             objectNames.add(names.get(id));
         }
         //TODO: get time limit properly
-        simulationText.append(CodeHelper.writeSimulationSetup(objectNames, eventNames, 10));
+        simulationText.append(CodeHelper.writeSimulationSetup(objectNames, eventNames, 20));
         simulationText.append(CodeHelper.writeObjectDeclaration(objects, names));
         for (String startEvent : findStartEvents(events)) {
             simulationText.append(CodeHelper.writeStartEvent(names.get(startEvent), getEventObjects(getRelations(startEvent))));
@@ -134,13 +143,13 @@ public class Generator {
     public void genObject(String id) throws IOException {
         String name = names.get(id).replaceAll(" ", "");
         name = name.replaceAll("\"", "");
-        File file = new File("src\\generatedSim\\" + name + ".js");
+        File file = new File(targetLocation + name + ".js");
         FileWriter writer = new FileWriter(file.getPath());
         StringBuilder result = new StringBuilder(CodeHelper.objectConstructor(name));
 
         List<String> attributeIds = objAttrs.get(id);
         for (String attrId : attributeIds) {
-            result.append(String.format("       this.%s = %s;\n", names.get(attrId), attrInitials.get(attrId)));
+            result.append(String.format("        this.%s = %s;\n", names.get(attrId), attrInitials.get(attrId)));
         }
         result.append("     } \n}");
         writer.append(result);
@@ -150,7 +159,7 @@ public class Generator {
     public void genEvent(String id) throws IOException {
         String name = names.get(id).replaceAll(" ", "");
         name = name.replaceAll("\"", "");
-        File file = new File("src\\generatedSim\\" + name + ".js");
+        File file = new File(targetLocation + name + ".js");
         FileWriter writer = new FileWriter(file.getPath());
 
         List<String> relations = getRelations(id);
@@ -171,7 +180,7 @@ public class Generator {
         }
 
         for (String relId : relations) {
-            if (relationTypes.get(relId) == RelationsType.TRIGGERING) {
+            if (relationTypes.get(relId) == RelationsType.TRIGGERING && sourceTarget.get(relId).get(0).equals(id)) {
                 Double likelihood = getLikelihood(relId);
                 if (likelihood == null) {
                     likelihood = 1.0;
@@ -184,7 +193,7 @@ public class Generator {
         result.append("       return followUpEvents;\n" +
                 "   }\n");
 
-        if (recurrences.containsKey(id)) {
+        if (getRecurrence(relations) != null) {
             result.append(CodeHelper.writeRecurrence(name, getRecurrence(relations), objects));
         }
 
