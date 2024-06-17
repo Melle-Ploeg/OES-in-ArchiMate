@@ -31,6 +31,11 @@ public class Generator {
 
     private final String targetLocation = "C:\\Users\\melle\\IdeaProjects\\oes\\JavaScript\\Core0\\Generated\\";
 
+    /**
+     * Sets up all maps used in this generator
+     * @param elementTree Parse tree of element CSV
+     * @param relationTree Parse tree of relations CSV
+     */
     public Generator(ParseTree elementTree, ParseTree relationTree) {
         ElementsMapper elMapper = new ElementsMapper();
         elMapper.runMapper(elementTree);
@@ -52,8 +57,13 @@ public class Generator {
         buildObjAttrs();
     }
 
+    /**
+     * Generates the simulation model
+     * @throws IOException For like a million reasons but probably file related
+     */
     public void genSim() throws IOException {
         copyStandardFiles();
+        //Build object and event lists
         List<String> events = new ArrayList<>();
         List<String> objects = new ArrayList<>();
         for (String elId : elementTypes.keySet()) {
@@ -64,12 +74,14 @@ public class Generator {
             }
         }
         setAttrInitials(objects);
+        //Generate all the object and event classes
         for (String id : events) {
             genEvent(id);
         }
         for (String id : objects) {
             genObject(id);
         }
+        //Generate the simulation setting file
         File file = new File(targetLocation + "simulation.js");
         FileWriter writer = new FileWriter(file.getPath());
         StringBuilder simulationText = new StringBuilder();
@@ -93,6 +105,10 @@ public class Generator {
         writer.flush();
     }
 
+    /**
+     * Copies the simulation worker and index file from this directory, as they are always the same
+     * @throws IOException If there are file problems
+     */
     private void copyStandardFiles() throws IOException {
         Path simWorkerTarget = Paths.get(targetLocation + "\\simulation-worker.js");
         Path simWorkerSource = Paths.get("src\\generator\\simulation-worker.js");
@@ -103,6 +119,9 @@ public class Generator {
         Files.copy(indexSource, indexTarget, StandardCopyOption.REPLACE_EXISTING);
     }
 
+    /**
+     * Builds the maps of objects to their attributes and attributes to their objects
+     */
     private void buildObjAttrs() {
         for (String id : elementTypes.keySet()) {
             if (elementTypes.get(id) == ElemType.OBJECT) {
@@ -124,6 +143,10 @@ public class Generator {
         }
     }
 
+    /**
+     * Builds the map of attributes to their initial values
+     * @param objects List of object IDs
+     */
     private void setAttrInitials(List<String> objects) {
         for (String objId : objects) {
             List<String> attributeIds = objAttrs.get(objId);
@@ -143,6 +166,11 @@ public class Generator {
         }
     }
 
+    /**
+     * Generates an object class
+     * @param id ID of object element
+     * @throws IOException If something goes wrong with file writing
+     */
     public void genObject(String id) throws IOException {
         String name = names.get(id).replaceAll(" ", "");
         name = name.replaceAll("\"", "");
@@ -159,6 +187,11 @@ public class Generator {
         writer.flush();
     }
 
+    /**
+     * Generates code for an event class
+     * @param id ID of event object
+     * @throws IOException If something goes wrong with file writing
+     */
     public void genEvent(String id) throws IOException {
         String name = names.get(id).replaceAll(" ", "");
         name = name.replaceAll("\"", "");
@@ -172,6 +205,7 @@ public class Generator {
 
         result.append("\n   onEvent() {\n" +
                 "       var followUpEvents = [];\n");
+        //Writes code for this event affecting object attributes
         for (String relId : relations) {
             if (relationTypes.get(relId) == RelationsType.INFLUENCES) {
                 String attrId = sourceTarget.get(relId).get(1);
@@ -181,7 +215,7 @@ public class Generator {
                 result.append(CodeHelper.writeAssignment(names.get(attrToObj.get(attrId)), attrName, op, value));
             }
         }
-
+        //Writes code for event triggering other events
         for (String relId : relations) {
             if (relationTypes.get(relId) == RelationsType.TRIGGERING && sourceTarget.get(relId).get(0).equals(id)) {
                 Double likelihood = getLikelihood(relId);
@@ -206,6 +240,11 @@ public class Generator {
 
     }
 
+    /**
+     * Gets the likelihood of a triggering relation from 0.0 to 1.0
+     * @param relId ID of triggering relation
+     * @return Likelihood triggering relation, or 1.0 if the triggering is certain
+     */
     private Double getLikelihood(String relId) {
         for (String relId2 : getRelations(relId)) {
             for (String id : sourceTarget.get(relId2)) {
@@ -219,6 +258,11 @@ public class Generator {
         return null;
     }
 
+    /**
+     * Gets the recurrence (range) of an event
+     * @param relations List of event's relationships
+     * @return 1 or 2 numbers describing the recurrence
+     */
     private List<Integer> getRecurrence(List<String> relations) {
         for (String relId : relations) {
             if (recurrences.containsKey(sourceTarget.get(relId).get(0))) {
@@ -230,7 +274,13 @@ public class Generator {
         return null;
     }
 
+    /**
+     * Get the objects used by an event
+     * @param relations Relations of event in question
+     * @return List of object names
+     */
     private List<String> getEventObjects(List<String> relations) {
+        //TODO: also get objects used by triggered events
         List<String> objects = new ArrayList<>();
         for (String relId : relations) {
             if (relationTypes.get(relId) == RelationsType.ASSOCIATION) {
@@ -244,6 +294,11 @@ public class Generator {
         return objects;
     }
 
+    /**
+     * Gets all the relations associated with the given element
+     * @param id ID of element
+     * @return List of all associated events
+     */
     private List<String> getRelations(String id) {
         List<String> result = new ArrayList<>();
         for (String relId : sourceTarget.keySet()) {
@@ -254,6 +309,11 @@ public class Generator {
         return result;
     }
 
+    /**
+     * Finds the start event(s) of the simulation by looking for events without incoming triggering relations
+     * @param events List of all event IDs in simulation
+     * @return List of all starting event IDs
+     */
     private List<String> findStartEvents(List<String> events) {
         List<String> result = new ArrayList<>();
         List<String> nonStart = new ArrayList<>();
@@ -270,6 +330,32 @@ public class Generator {
         return result;
     }
 
+    /**
+     * Asks the user for a time limit on the simulation when generating a model
+     * @return Integer from user input
+     */
+    public static Integer askTimeLimit() {
+        Scanner scanner = new Scanner(System.in);
+        boolean success = false;
+        Integer result = null;
+        System.out.println("Please enter a time limit (in simulation turns): ");
+        while (!success) {
+            try {
+                success = true;
+                result = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Incorrect input, please enter a whole number.");
+                success = false;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Parses elements and relations CSVs and runs the generator
+     * @param args Not used
+     * @throws IOException Thrown when there are file issues
+     */
     public static void main(String[] args) throws IOException {
         File elementsFile = new File("src\\examples/elements.csv");
         CharStream charStream = CharStreams.fromPath(Paths.get(elementsFile.getPath()));
@@ -289,21 +375,6 @@ public class Generator {
         gen.genSim();
     }
 
-    public static Integer askTimeLimit() {
-        Scanner scanner = new Scanner(System.in);
-        boolean success = false;
-        Integer result = null;
-        System.out.println("Please enter a time limit (in simulation turns): ");
-        while (!success) {
-            try {
-                success = true;
-                result = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Incorrect input, please enter a whole number.");
-                success = false;
-            }
-        }
-        return result;
-    }
+
 
 }

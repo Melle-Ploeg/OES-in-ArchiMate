@@ -15,7 +15,6 @@ public class RelationsMapper extends RelationsGrammarBaseVisitor<Object> {
     private final Map<String, Double> values;
     private final Map<String, Operant> operants;
 
-
     public RelationsMapper() {
         types = new HashMap<>();
         sourceTarget = new HashMap<>();
@@ -23,10 +22,19 @@ public class RelationsMapper extends RelationsGrammarBaseVisitor<Object> {
         operants = new HashMap<>();
     }
 
+    /**
+     * Visits the parseTree of the relations csv file
+     * @param parseTree Relations CSV parse tree
+     */
     public void runMapper(ParseTree parseTree) {
         visit(parseTree);
     }
 
+    /**
+     * Puts an element's information in the appropriate maps
+     * @param ctx the parse tree
+     * @return Not used
+     */
     @Override
     public Object visitRow(RelationsGrammarParser.RowContext ctx) {
         String ID = ctx.IDENTIFIER(0).getText();
@@ -46,6 +54,11 @@ public class RelationsMapper extends RelationsGrammarBaseVisitor<Object> {
         return null;
     }
 
+    /**
+     * Checks the type of relationship
+     * @param ctx the parse tree
+     * @return The type of relationship
+     */
     @Override
     public Object visitType(RelationsGrammarParser.TypeContext ctx) {
         if (ctx.ASSOCIATIONRELATIONSHIP() != null) {
@@ -74,6 +87,11 @@ public class RelationsMapper extends RelationsGrammarBaseVisitor<Object> {
         return operants;
     }
 
+    /**
+     * Parses an operant
+     * @param str Operant to parse, should be 1 character
+     * @return Operant enumerator
+     */
     private Operant parseOp(String str) {
         if (str.contains("+")) {
             return Operant.PLUS;

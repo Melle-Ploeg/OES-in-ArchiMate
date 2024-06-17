@@ -26,6 +26,11 @@ public class ElementsMapper extends ElementsGrammarBaseVisitor<Object> {
         visit(parseTree);
     }
 
+    /**
+     * Puts element information in relevant maps, checking the type, name, and values
+     * @param ctx the parse tree
+     * @return Not used
+     */
     @Override
     public Object visitRow(ElementsGrammarParser.RowContext ctx) {
         types.put(ctx.IDENTIFIER().getText(), (ElemType) visit(ctx.type()));
@@ -55,16 +60,31 @@ public class ElementsMapper extends ElementsGrammarBaseVisitor<Object> {
         return null;
     }
 
+    /**
+     * Returns the object type, for use by row visitor
+     * @param ctx the parse tree
+     * @return Object enumerator
+     */
     @Override
     public Object visitObject(ElementsGrammarParser.ObjectContext ctx) {
         return ElemType.OBJECT;
     }
 
+    /**
+     * Returns the event type, for use by the row visitor
+     * @param ctx the parse tree
+     * @return Event enumerator
+     */
     @Override
     public Object visitEvent(ElementsGrammarParser.EventContext ctx) {
         return ElemType.EVENT;
     }
 
+    /**
+     * Checks the type of element if it is not an object or event
+     * @param ctx the parse tree
+     * @return The element's type
+     */
     @Override
     public Object visitOther(ElementsGrammarParser.OtherContext ctx) {
         if (ctx.VALUE() != null) {

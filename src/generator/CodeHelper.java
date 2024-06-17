@@ -3,8 +3,16 @@ package generator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class contains code to generate several types of code
+ */
 public class CodeHelper {
 
+    /**
+     * Writes an object's constructor
+     * @param name The object's name
+     * @return The start of an object constructor
+     */
     public static String objectConstructor(String name) {
         String result = String.format("class %s extends oBJECT { \n", name);
         result += "    constructor({id, name}) { \n";
@@ -12,6 +20,12 @@ public class CodeHelper {
         return result;
     }
 
+    /**
+     * Writes an event's constructor
+     * @param name The event's name
+     * @param objects Names of the objects the event will be constructed with
+     * @return A complete event constructor
+     */
     public static String eventConstructor(String name, List<String> objects) {
         StringBuilder result = new StringBuilder(String.format("class %s extends eVENT { \n" +
                 "   constructor({delay", name));
@@ -26,6 +40,14 @@ public class CodeHelper {
         return result.toString();
     }
 
+    /**
+     * Writes an assignment event rule
+     * @param objectName Name of object whose attribute is to be changed
+     * @param attrName Name of attribute to be changed
+     * @param op Operant of assignment
+     * @param value Value in equation
+     * @return Assignment and simulation assignment line
+     */
     public static StringBuilder writeAssignment(String objectName, String attrName, Operant op, Double value) {
         StringBuilder result = new StringBuilder(String.format("       this.%s.%s = this.%s.%s ", objectName, attrName, objectName, attrName));
         StringBuilder simStat = new StringBuilder(String.format("       sim.stat.%s%s = sim.stat.%s%s ", objectName, attrName, objectName, attrName));
@@ -53,6 +75,13 @@ public class CodeHelper {
         return result;
     }
 
+    /**
+     * Writes the recurrence functions of an event
+     * @param name Name of event
+     * @param recurrences List of 1 or 2 long, describing either a static recurrence or a range of recurrence
+     * @param objects Objects used as arguments in event's constructor
+     * @return Next event creation and recurrence getter methods
+     */
     public static StringBuilder writeRecurrence(String name, List<Integer> recurrences, List<String> objects) {
         StringBuilder result = new StringBuilder(String.format("    createNextEvent() {\n" +
                 "       return new %s({delay: %s.recurrence()", name, name));
@@ -71,6 +100,13 @@ public class CodeHelper {
         return result;
     }
 
+    /**
+     * Writes the code for a triggering event rule
+     * @param subjectName Name of event to be triggered
+     * @param likelihood Chance of event to be triggered. Use 1.0 if the chance of 100%
+     * @param argNames Names of arguments to be passed to created event
+     * @return Code triggering an event, with probability
+     */
     public static StringBuilder writeEventTrigger(String subjectName, Double likelihood, List<String> argNames) {
         StringBuilder result = new StringBuilder();
         result.append(String.format("       if(Math.random() < %s) {\n    ", likelihood));
@@ -85,6 +121,13 @@ public class CodeHelper {
         return result;
     }
 
+    /**
+     * Declares the time limit, object types, and event types for the simulation
+     * @param objectNames List of objects in this simulation
+     * @param eventNames List of events in this simulation
+     * @param timeLimit Time limit of this simulation
+     * @return Code for simulation settings
+     */
     public static StringBuilder writeSimulationSetup(List<String> objectNames, List<String> eventNames, int timeLimit) {
         StringBuilder result = new StringBuilder(String.format("sim.scenario.durationInSimTime = %s;\n", timeLimit));
         result.append("sim.model.time = \"discrete\";\n");
@@ -109,6 +152,12 @@ public class CodeHelper {
         return result;
     }
 
+    /**
+     * Writes code for declaration of simulation objects
+     * @param objIds List of sim object IDs
+     * @param names Map of object IDs to names
+     * @return Code that declares simulation objects
+     */
     public static StringBuilder writeObjectDeclaration(List<String> objIds, Map<String, String> names) {
         StringBuilder result = new StringBuilder();
         for (String objId : objIds) {
@@ -119,6 +168,12 @@ public class CodeHelper {
         return result;
     }
 
+    /**
+     * Writes code to put a starting event on the future events list
+     * @param eventName Name of starting event
+     * @param arguments Arguments of starting event
+     * @return Line of code that puts the given event on the FEL
+     */
     public static StringBuilder writeStartEvent(String eventName, List<String> arguments) {
         StringBuilder result = new StringBuilder(String.format("    sim.FEL.add(new %s({delay:0", eventName));
         for (String argument : arguments) {
@@ -128,6 +183,13 @@ public class CodeHelper {
         return result;
     }
 
+    /**
+     * Sets the initial values for all attributes in this simulation for the statistics
+     * @param objAttrs Map of object to attribute IDs
+     * @param names Map of element names
+     * @param attrInitials Map of attribute initial values
+     * @return Code initialising the attributes for the simulation statistics
+     */
     public static StringBuilder writeStatisticSetup(Map<String, List<String>> objAttrs, Map<String, String> names, Map<String, Double> attrInitials) {
         StringBuilder result = new StringBuilder("sim.model.setupStatistics = function() {\n");
         for (String objId : objAttrs.keySet()) {
