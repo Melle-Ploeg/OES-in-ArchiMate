@@ -208,4 +208,39 @@ public class CodeHelper {
         return result;
     }
 
+    /**
+     * Generates code for an "or" junction. All lists should be the same length
+     * @param likelihoods List of likelihoods of each option
+     * @param eventNames List of names of event class of each option
+     * @param eventAttributeNames List of attribute names of each event class
+     * @return StringBuilder with code of junction
+     */
+    public static StringBuilder writeJunction(List<Double> likelihoods, List<String> eventNames, List<List<String>> eventAttributeNames) {
+        StringBuilder result = new StringBuilder("      var chance = Math.random();\n");
+        Double total = 0.0;
+        result.append(String.format("        if(chance < %s) {\n", likelihoods.get(0)));
+        result.append(String.format("           followUpEvents.push(new %s({", eventNames.get(0)));
+        for (int i = 0; i < eventAttributeNames.get(0).size(); i++) {
+            result.append(String.format("%s: this.%s", eventAttributeNames.get(0).get(i), eventAttributeNames.get(0).get(i)));
+            if (!(i == eventAttributeNames.get(0).size() - 1)) {
+                result.append(", ");
+            }
+        }
+        result.append("}));\n       }");
+        total += likelihoods.get(0);
+        for (int i = 1; i < likelihoods.size(); i++) {
+            result.append(String.format(" else if (chance < %s) {\n", total + likelihoods.get(i)));
+            result.append(String.format("           followUpEvents.push(new %s({", eventNames.get(i)));
+            for (int j = 0; j < eventAttributeNames.get(i).size(); j++) {
+                result.append(String.format("%s: this.%s", eventAttributeNames.get(i).get(j), eventAttributeNames.get(i).get(j)));
+                if (!(j == eventAttributeNames.get(i).size() - 1)) {
+                    result.append(", ");
+                }
+            }
+            result.append("}));\n       }");
+        }
+        result.append("\n");
+        return result;
+    }
+
 }

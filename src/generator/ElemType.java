@@ -9,5 +9,6 @@ public enum ElemType {
     RECURRENCE,
     LIKELIHOOD,
     CONSTRAINT,
-    ASSESSMENT
+    ASSESSMENT,
+    JUNCTION
 }

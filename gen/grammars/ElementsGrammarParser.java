@@ -18,14 +18,15 @@ public class ElementsGrammarParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, ASSESSMENT=3, CONSTRAINT=4, VALUE=5, ARCHIMATEMODEL=6, 
-		RESOURCE=7, BUSINESSOBJECT=8, CONTRACT=9, PRODUCT=10, DATAOBJECT=11, COMMUNICATIONNETWORK=12, 
-		DEVICE=13, DISTRIBUTIONNETWORK=14, EQUIPMENT=15, FACILITY=16, NODE=17, 
-		SYSTEMSOFTWARE=18, BUSINESSCOLLABORATION=19, BUSNESSEVENT=20, BUSSINESSFUNCTION=21, 
-		BUSINESSINTERACTION=22, BUSINESSPROCESS=23, BUSINESSSERVICE=24, APPLICATIONCOLLABORATION=25, 
-		APPLICATIONPROCESS=26, APPLICATIONSERVICE=27, TECHNOLOGYCOLLABORATION=28, 
-		TECHNOLOGYEVENT=29, TECHNOLOGYFUNCTION=30, TECHNOLOGYINTERACTION=31, TECHNOLOGYPROCESS=32, 
-		TECHNOLOGYSERVICE=33, OUTCOME=34, PAR=35, COM=36, ID=37, IDENTIFIER=38, 
-		STRING=39, NUMBER=40, DOUBLE=41;
+		JUNCTION=7, RESOURCE=8, BUSINESSOBJECT=9, CONTRACT=10, PRODUCT=11, DATAOBJECT=12, 
+		COMMUNICATIONNETWORK=13, DEVICE=14, DISTRIBUTIONNETWORK=15, EQUIPMENT=16, 
+		FACILITY=17, NODE=18, SYSTEMSOFTWARE=19, BUSINESSCOLLABORATION=20, BUSNESSEVENT=21, 
+		BUSSINESSFUNCTION=22, BUSINESSINTERACTION=23, BUSINESSPROCESS=24, BUSINESSSERVICE=25, 
+		APPLICATIONCOLLABORATION=26, APPLICATIONPROCESS=27, APPLICATIONSERVICE=28, 
+		TECHNOLOGYCOLLABORATION=29, TECHNOLOGYEVENT=30, TECHNOLOGYFUNCTION=31, 
+		TECHNOLOGYINTERACTION=32, TECHNOLOGYPROCESS=33, TECHNOLOGYSERVICE=34, 
+		OUTCOME=35, PAR=36, COM=37, ID=38, IDENTIFIER=39, STRING=40, NUMBER=41, 
+		DOUBLE=42;
 	public static final int
 		RULE_csvFile = 0, RULE_hdr = 1, RULE_row = 2, RULE_field = 3, RULE_name = 4, 
 		RULE_type = 5, RULE_object = 6, RULE_event = 7, RULE_other = 8;
@@ -40,28 +41,30 @@ public class ElementsGrammarParser extends Parser {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, "'\\r'", "'\\n'", "'\"Assessment\"'", "'\"Constraint\"'", "'\"Value\"'", 
-			"'\"ArchimateModel\"'", "'\"Resource\"'", "'\"BusinessObject\"'", "'\"Contract\"'", 
-			"'\"Product\"'", "'\"DataObject\"'", "'\"CommunicationNetwork\"'", "'\"Device\"'", 
-			"'\"DistributionNetwork\"'", "'\"Equipment\"'", "'\"Facility\"'", "'\"Node\"'", 
-			"'\"SystemSoftware\"'", "'\"BusinessCollaboration\"'", "'\"BusinessEvent\"'", 
-			"'\"BusinessFunction\"'", "'\"BusinessInteraction\"'", "'\"BusinessProcess\"'", 
-			"'\"BusinessService\"'", "'\"ApplicationCollaboration\"'", "'\"ApplicationProcess\"'", 
-			"'\"ApplicationService\"'", "'\"TechnologyCollaboration\"'", "'\"TechnologyEvent\"'", 
-			"'\"TechnologyFunction\"'", "'\"TechnologyInteraction\"'", "'\"TechnologyProcess\"'", 
-			"'\"TechnologyService\"'", "'\"Outcome\"'", "'\"'", "','", "'id-'"
+			"'\"ArchimateModel\"'", "'\"Junction\"'", "'\"Resource\"'", "'\"BusinessObject\"'", 
+			"'\"Contract\"'", "'\"Product\"'", "'\"DataObject\"'", "'\"CommunicationNetwork\"'", 
+			"'\"Device\"'", "'\"DistributionNetwork\"'", "'\"Equipment\"'", "'\"Facility\"'", 
+			"'\"Node\"'", "'\"SystemSoftware\"'", "'\"BusinessCollaboration\"'", 
+			"'\"BusinessEvent\"'", "'\"BusinessFunction\"'", "'\"BusinessInteraction\"'", 
+			"'\"BusinessProcess\"'", "'\"BusinessService\"'", "'\"ApplicationCollaboration\"'", 
+			"'\"ApplicationProcess\"'", "'\"ApplicationService\"'", "'\"TechnologyCollaboration\"'", 
+			"'\"TechnologyEvent\"'", "'\"TechnologyFunction\"'", "'\"TechnologyInteraction\"'", 
+			"'\"TechnologyProcess\"'", "'\"TechnologyService\"'", "'\"Outcome\"'", 
+			"'\"'", "','", "'id-'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, "ASSESSMENT", "CONSTRAINT", "VALUE", "ARCHIMATEMODEL", 
-			"RESOURCE", "BUSINESSOBJECT", "CONTRACT", "PRODUCT", "DATAOBJECT", "COMMUNICATIONNETWORK", 
-			"DEVICE", "DISTRIBUTIONNETWORK", "EQUIPMENT", "FACILITY", "NODE", "SYSTEMSOFTWARE", 
-			"BUSINESSCOLLABORATION", "BUSNESSEVENT", "BUSSINESSFUNCTION", "BUSINESSINTERACTION", 
-			"BUSINESSPROCESS", "BUSINESSSERVICE", "APPLICATIONCOLLABORATION", "APPLICATIONPROCESS", 
-			"APPLICATIONSERVICE", "TECHNOLOGYCOLLABORATION", "TECHNOLOGYEVENT", "TECHNOLOGYFUNCTION", 
-			"TECHNOLOGYINTERACTION", "TECHNOLOGYPROCESS", "TECHNOLOGYSERVICE", "OUTCOME", 
-			"PAR", "COM", "ID", "IDENTIFIER", "STRING", "NUMBER", "DOUBLE"
+			"JUNCTION", "RESOURCE", "BUSINESSOBJECT", "CONTRACT", "PRODUCT", "DATAOBJECT", 
+			"COMMUNICATIONNETWORK", "DEVICE", "DISTRIBUTIONNETWORK", "EQUIPMENT", 
+			"FACILITY", "NODE", "SYSTEMSOFTWARE", "BUSINESSCOLLABORATION", "BUSNESSEVENT", 
+			"BUSSINESSFUNCTION", "BUSINESSINTERACTION", "BUSINESSPROCESS", "BUSINESSSERVICE", 
+			"APPLICATIONCOLLABORATION", "APPLICATIONPROCESS", "APPLICATIONSERVICE", 
+			"TECHNOLOGYCOLLABORATION", "TECHNOLOGYEVENT", "TECHNOLOGYFUNCTION", "TECHNOLOGYINTERACTION", 
+			"TECHNOLOGYPROCESS", "TECHNOLOGYSERVICE", "OUTCOME", "PAR", "COM", "ID", 
+			"IDENTIFIER", "STRING", "NUMBER", "DOUBLE"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -407,6 +410,7 @@ public class ElementsGrammarParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class NameContext extends ParserRuleContext {
 		public TerminalNode STRING() { return getToken(ElementsGrammarParser.STRING, 0); }
+		public TerminalNode JUNCTION() { return getToken(ElementsGrammarParser.JUNCTION, 0); }
 		public NameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -429,11 +433,20 @@ public class ElementsGrammarParser extends Parser {
 	public final NameContext name() throws RecognitionException {
 		NameContext _localctx = new NameContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_name);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(57);
-			match(STRING);
+			_la = _input.LA(1);
+			if ( !(_la==JUNCTION || _la==STRING) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -528,6 +541,7 @@ public class ElementsGrammarParser extends Parser {
 			case ASSESSMENT:
 			case CONSTRAINT:
 			case VALUE:
+			case JUNCTION:
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(61);
@@ -598,7 +612,7 @@ public class ElementsGrammarParser extends Parser {
 			{
 			setState(65);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 524160L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 1048320L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -665,7 +679,7 @@ public class ElementsGrammarParser extends Parser {
 			{
 			setState(67);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 34359214080L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 68718428160L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -691,6 +705,7 @@ public class ElementsGrammarParser extends Parser {
 		public TerminalNode ASSESSMENT() { return getToken(ElementsGrammarParser.ASSESSMENT, 0); }
 		public TerminalNode CONSTRAINT() { return getToken(ElementsGrammarParser.CONSTRAINT, 0); }
 		public TerminalNode VALUE() { return getToken(ElementsGrammarParser.VALUE, 0); }
+		public TerminalNode JUNCTION() { return getToken(ElementsGrammarParser.JUNCTION, 0); }
 		public OtherContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -719,7 +734,7 @@ public class ElementsGrammarParser extends Parser {
 			{
 			setState(69);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 56L) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 184L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -741,7 +756,7 @@ public class ElementsGrammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001)H\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002\u0002"+
+		"\u0004\u0001*H\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002\u0002"+
 		"\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002\u0005"+
 		"\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002\b\u0007"+
 		"\b\u0001\u0000\u0001\u0000\u0004\u0000\u0015\b\u0000\u000b\u0000\f\u0000"+
@@ -753,36 +768,36 @@ public class ElementsGrammarParser extends Parser {
 		"\u00026\b\u0002\u0001\u0003\u0001\u0003\u0001\u0004\u0001\u0004\u0001"+
 		"\u0005\u0001\u0005\u0001\u0005\u0001\u0005\u0003\u0005@\b\u0005\u0001"+
 		"\u0006\u0001\u0006\u0001\u0007\u0001\u0007\u0001\b\u0001\b\u0001\b\u0000"+
-		"\u0000\t\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0000\u0003\u0001\u0000"+
-		"\u0007\u0012\u0001\u0000\u0013\"\u0001\u0000\u0003\u0005E\u0000\u0012"+
-		"\u0001\u0000\u0000\u0000\u0002\u001a\u0001\u0000\u0000\u0000\u0004(\u0001"+
-		"\u0000\u0000\u0000\u00067\u0001\u0000\u0000\u0000\b9\u0001\u0000\u0000"+
-		"\u0000\n?\u0001\u0000\u0000\u0000\fA\u0001\u0000\u0000\u0000\u000eC\u0001"+
-		"\u0000\u0000\u0000\u0010E\u0001\u0000\u0000\u0000\u0012\u0014\u0003\u0002"+
-		"\u0001\u0000\u0013\u0015\u0003\u0004\u0002\u0000\u0014\u0013\u0001\u0000"+
-		"\u0000\u0000\u0015\u0016\u0001\u0000\u0000\u0000\u0016\u0014\u0001\u0000"+
-		"\u0000\u0000\u0016\u0017\u0001\u0000\u0000\u0000\u0017\u0018\u0001\u0000"+
-		"\u0000\u0000\u0018\u0019\u0005\u0000\u0000\u0001\u0019\u0001\u0001\u0000"+
-		"\u0000\u0000\u001a\u001b\u0003\u0006\u0003\u0000\u001b\u001c\u0005$\u0000"+
-		"\u0000\u001c\u001d\u0003\u0006\u0003\u0000\u001d\u001e\u0005$\u0000\u0000"+
-		"\u001e\u001f\u0003\u0006\u0003\u0000\u001f \u0005$\u0000\u0000 !\u0003"+
-		"\u0006\u0003\u0000!\"\u0005$\u0000\u0000\"$\u0003\u0006\u0003\u0000#%"+
-		"\u0005\u0001\u0000\u0000$#\u0001\u0000\u0000\u0000$%\u0001\u0000\u0000"+
-		"\u0000%&\u0001\u0000\u0000\u0000&\'\u0005\u0002\u0000\u0000\'\u0003\u0001"+
-		"\u0000\u0000\u0000()\u0005&\u0000\u0000)*\u0005$\u0000\u0000*+\u0003\n"+
-		"\u0005\u0000+,\u0005$\u0000\u0000,-\u0003\b\u0004\u0000-.\u0005$\u0000"+
-		"\u0000./\u0003\u0006\u0003\u0000/0\u0005$\u0000\u000002\u0003\u0006\u0003"+
-		"\u000013\u0005\u0001\u0000\u000021\u0001\u0000\u0000\u000023\u0001\u0000"+
-		"\u0000\u000035\u0001\u0000\u0000\u000046\u0005\u0002\u0000\u000054\u0001"+
-		"\u0000\u0000\u000056\u0001\u0000\u0000\u00006\u0005\u0001\u0000\u0000"+
-		"\u000078\u0005\'\u0000\u00008\u0007\u0001\u0000\u0000\u00009:\u0005\'"+
-		"\u0000\u0000:\t\u0001\u0000\u0000\u0000;@\u0003\f\u0006\u0000<@\u0003"+
-		"\u000e\u0007\u0000=@\u0003\u0010\b\u0000>@\u0005\u0006\u0000\u0000?;\u0001"+
-		"\u0000\u0000\u0000?<\u0001\u0000\u0000\u0000?=\u0001\u0000\u0000\u0000"+
-		"?>\u0001\u0000\u0000\u0000@\u000b\u0001\u0000\u0000\u0000AB\u0007\u0000"+
-		"\u0000\u0000B\r\u0001\u0000\u0000\u0000CD\u0007\u0001\u0000\u0000D\u000f"+
-		"\u0001\u0000\u0000\u0000EF\u0007\u0002\u0000\u0000F\u0011\u0001\u0000"+
-		"\u0000\u0000\u0005\u0016$25?";
+		"\u0000\t\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0000\u0004\u0002\u0000"+
+		"\u0007\u0007((\u0001\u0000\b\u0013\u0001\u0000\u0014#\u0002\u0000\u0003"+
+		"\u0005\u0007\u0007E\u0000\u0012\u0001\u0000\u0000\u0000\u0002\u001a\u0001"+
+		"\u0000\u0000\u0000\u0004(\u0001\u0000\u0000\u0000\u00067\u0001\u0000\u0000"+
+		"\u0000\b9\u0001\u0000\u0000\u0000\n?\u0001\u0000\u0000\u0000\fA\u0001"+
+		"\u0000\u0000\u0000\u000eC\u0001\u0000\u0000\u0000\u0010E\u0001\u0000\u0000"+
+		"\u0000\u0012\u0014\u0003\u0002\u0001\u0000\u0013\u0015\u0003\u0004\u0002"+
+		"\u0000\u0014\u0013\u0001\u0000\u0000\u0000\u0015\u0016\u0001\u0000\u0000"+
+		"\u0000\u0016\u0014\u0001\u0000\u0000\u0000\u0016\u0017\u0001\u0000\u0000"+
+		"\u0000\u0017\u0018\u0001\u0000\u0000\u0000\u0018\u0019\u0005\u0000\u0000"+
+		"\u0001\u0019\u0001\u0001\u0000\u0000\u0000\u001a\u001b\u0003\u0006\u0003"+
+		"\u0000\u001b\u001c\u0005%\u0000\u0000\u001c\u001d\u0003\u0006\u0003\u0000"+
+		"\u001d\u001e\u0005%\u0000\u0000\u001e\u001f\u0003\u0006\u0003\u0000\u001f"+
+		" \u0005%\u0000\u0000 !\u0003\u0006\u0003\u0000!\"\u0005%\u0000\u0000\""+
+		"$\u0003\u0006\u0003\u0000#%\u0005\u0001\u0000\u0000$#\u0001\u0000\u0000"+
+		"\u0000$%\u0001\u0000\u0000\u0000%&\u0001\u0000\u0000\u0000&\'\u0005\u0002"+
+		"\u0000\u0000\'\u0003\u0001\u0000\u0000\u0000()\u0005\'\u0000\u0000)*\u0005"+
+		"%\u0000\u0000*+\u0003\n\u0005\u0000+,\u0005%\u0000\u0000,-\u0003\b\u0004"+
+		"\u0000-.\u0005%\u0000\u0000./\u0003\u0006\u0003\u0000/0\u0005%\u0000\u0000"+
+		"02\u0003\u0006\u0003\u000013\u0005\u0001\u0000\u000021\u0001\u0000\u0000"+
+		"\u000023\u0001\u0000\u0000\u000035\u0001\u0000\u0000\u000046\u0005\u0002"+
+		"\u0000\u000054\u0001\u0000\u0000\u000056\u0001\u0000\u0000\u00006\u0005"+
+		"\u0001\u0000\u0000\u000078\u0005(\u0000\u00008\u0007\u0001\u0000\u0000"+
+		"\u00009:\u0007\u0000\u0000\u0000:\t\u0001\u0000\u0000\u0000;@\u0003\f"+
+		"\u0006\u0000<@\u0003\u000e\u0007\u0000=@\u0003\u0010\b\u0000>@\u0005\u0006"+
+		"\u0000\u0000?;\u0001\u0000\u0000\u0000?<\u0001\u0000\u0000\u0000?=\u0001"+
+		"\u0000\u0000\u0000?>\u0001\u0000\u0000\u0000@\u000b\u0001\u0000\u0000"+
+		"\u0000AB\u0007\u0001\u0000\u0000B\r\u0001\u0000\u0000\u0000CD\u0007\u0002"+
+		"\u0000\u0000D\u000f\u0001\u0000\u0000\u0000EF\u0007\u0003\u0000\u0000"+
+		"F\u0011\u0001\u0000\u0000\u0000\u0005\u0016$25?";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

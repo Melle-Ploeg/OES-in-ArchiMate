@@ -4,7 +4,7 @@ csvFile : hdr row+ EOF ;
 hdr : field ',' field ',' field ',' field ',' field '\r'? '\n' ;
 row : IDENTIFIER ',' type ',' name ',' field ',' field '\r'? '\n'? ;
 field : STRING ;
-name : STRING ;
+name : STRING | JUNCTION ;
 
 type : object
         | event
@@ -43,13 +43,15 @@ event : BUSINESSCOLLABORATION
 
 other : ASSESSMENT
         | CONSTRAINT
-        | VALUE ;
+        | VALUE
+        | JUNCTION ;
 
 /** Other element types */
 ASSESSMENT : '"Assessment"';
 CONSTRAINT : '"Constraint"';
 VALUE : '"Value"';
 ARCHIMATEMODEL : '"ArchimateModel"';
+JUNCTION : '"Junction"';
 
 /** Archi object types */
 RESOURCE : '"Resource"';

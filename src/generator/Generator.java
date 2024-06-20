@@ -96,7 +96,7 @@ public class Generator {
         simulationText.append(CodeHelper.writeSimulationSetup(objectNames, eventNames, askTimeLimit()));
         simulationText.append(CodeHelper.writeObjectDeclaration(objects, names));
         for (String startEvent : findStartEvents(events)) {
-            simulationText.append(CodeHelper.writeStartEvent(names.get(startEvent), getEventObjects(startEvent)));
+            simulationText.append(CodeHelper.writeStartEvent(names.get(startEvent), convertToNames(getEventObjects(startEvent))));
         }
         simulationText.append("}\n");
         simulationText.append(CodeHelper.writeStatisticSetup(objAttrs, names, attrInitials));
@@ -199,7 +199,7 @@ public class Generator {
         FileWriter writer = new FileWriter(file.getPath());
 
         List<String> relations = getRelations(id);
-        List<String> objects = getEventObjects(id);
+        List<String> objects = convertToNames(getEventObjects(id));
         StringBuilder result = new StringBuilder(CodeHelper.eventConstructor(name, objects));
         result.append("    } \n");
 
@@ -218,12 +218,34 @@ public class Generator {
         //Writes code for event triggering other events
         for (String relId : relations) {
             if (relationTypes.get(relId) == RelationsType.TRIGGERING && sourceTarget.get(relId).get(0).equals(id)) {
-                Double likelihood = getLikelihood(relId);
-                if (likelihood == null) {
-                    likelihood = 1.0;
+                if (elementTypes.get(sourceTarget.get(relId).get(1)) == ElemType.EVENT) {
+                    Double likelihood = getLikelihood(relId);
+                    if (likelihood == null) {
+                        likelihood = 1.0;
+                    }
+                    String subjectName = names.get(sourceTarget.get(relId).get(1));
+                    result.append(CodeHelper.writeEventTrigger(subjectName, likelihood, convertToNames(getEventObjects(sourceTarget.get(relId).get(1)))));
+                } else {
+                    //Writes junction code
+                    String junctionId = sourceTarget.get(relId).get(1);
+                    List<String> junctionTriggers = new ArrayList<>();
+                    for (String triggerId : getRelations(junctionId)) {
+                        if (!sourceTarget.get(triggerId).get(1).equals(junctionId)) {
+                            junctionTriggers.add(triggerId);
+                        }
+                    }
+                    List<Double> likelihoods = new ArrayList<>();
+                    List<String> eventNames = new ArrayList<>();
+                    List<List<String>> eventAttributeNames = new ArrayList<>();
+                    for (String relId2 : junctionTriggers) {
+                        eventNames.add(names.get(sourceTarget.get(relId2).get(1)));
+                        eventAttributeNames.add(convertToNames(getEventObjects(sourceTarget.get(relId2).get(1))));
+                        likelihoods.add(getLikelihood(relId2));
+                    }
+
+                    result.append(CodeHelper.writeJunction(likelihoods, eventNames, eventAttributeNames));
+
                 }
-                String subjectName = names.get(sourceTarget.get(relId).get(1));
-                result.append(CodeHelper.writeEventTrigger(subjectName, likelihood, getEventObjects(sourceTarget.get(relId).get(1))));
             }
         }
 
@@ -275,9 +297,9 @@ public class Generator {
     }
 
     /**
-     * Get the objects used by an event
+     * Get the ids of all objects used by an event
      * @param id Event's id
-     * @return List of object names
+     * @return List of object IDs
      */
     private List<String> getEventObjects(String id) {
         List<String> relations = getRelations(id);
@@ -285,9 +307,9 @@ public class Generator {
         for (String relId : relations) {
             if (relationTypes.get(relId) == RelationsType.ASSOCIATION) {
                 if (elementTypes.get(sourceTarget.get(relId).get(0)) == ElemType.OBJECT) {
-                    objects.add(names.get(sourceTarget.get(relId).get(0)));
+                    objects.add(sourceTarget.get(relId).get(0));
                 } else if (elementTypes.get(sourceTarget.get(relId).get(1)) == ElemType.OBJECT) {
-                    objects.add(names.get(sourceTarget.get(relId).get(1)));
+                    objects.add(sourceTarget.get(relId).get(1));
                 }
             }
         }
@@ -367,6 +389,19 @@ public class Generator {
                 System.out.println("Incorrect input, please enter a whole number.");
                 success = false;
             }
+        }
+        return result;
+    }
+
+    /**
+     * Converts a list of IDs to a list of names
+     * @param Ids List of IDs
+     * @return List of names in the same order as the IDs
+     */
+    public List<String> convertToNames(List<String> Ids) {
+        List<String> result = new ArrayList<>();
+        for (String id : Ids) {
+            result.add(names.get(id));
         }
         return result;
     }
